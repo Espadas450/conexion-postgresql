@@ -1,0 +1,372 @@
+[33mcommit 5d0d5505ecf2d77c68e19719ca36c198e8cad7d0[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: Sajid Espadas Rodriguez <sajidespadas4@gmail.com>
+Date:   Sun Oct 6 22:51:03 2024 -0700
+
+    Program to establish connection with PostgreSQL
+
+[1mdiff --git a/.gitignore b/.gitignore[m
+[1mnew file mode 100644[m
+[1mindex 0000000..5ff6309[m
+[1m--- /dev/null[m
+[1m+++ b/.gitignore[m
+[36m@@ -0,0 +1,38 @@[m
+[32m+[m[32mtarget/[m
+[32m+[m[32m!.mvn/wrapper/maven-wrapper.jar[m
+[32m+[m[32m!**/src/main/**/target/[m
+[32m+[m[32m!**/src/test/**/target/[m
+[32m+[m
+[32m+[m[32m### IntelliJ IDEA ###[m
+[32m+[m[32m.idea/modules.xml[m
+[32m+[m[32m.idea/jarRepositories.xml[m
+[32m+[m[32m.idea/compiler.xml[m
+[32m+[m[32m.idea/libraries/[m
+[32m+[m[32m*.iws[m
+[32m+[m[32m*.iml[m
+[32m+[m[32m*.ipr[m
+[32m+[m
+[32m+[m[32m### Eclipse ###[m
+[32m+[m[32m.apt_generated[m
+[32m+[m[32m.classpath[m
+[32m+[m[32m.factorypath[m
+[32m+[m[32m.project[m
+[32m+[m[32m.settings[m
+[32m+[m[32m.springBeans[m
+[32m+[m[32m.sts4-cache[m
+[32m+[m
+[32m+[m[32m### NetBeans ###[m
+[32m+[m[32m/nbproject/private/[m
+[32m+[m[32m/nbbuild/[m
+[32m+[m[32m/dist/[m
+[32m+[m[32m/nbdist/[m
+[32m+[m[32m/.nb-gradle/[m
+[32m+[m[32mbuild/[m
+[32m+[m[32m!**/src/main/**/build/[m
+[32m+[m[32m!**/src/test/**/build/[m
+[32m+[m
+[32m+[m[32m### VS Code ###[m
+[32m+[m[32m.vscode/[m
+[32m+[m
+[32m+[m[32m### Mac OS ###[m
+[32m+[m[32m.DS_Store[m
+\ No newline at end of file[m
+[1mdiff --git a/.idea/encodings.xml b/.idea/encodings.xml[m
+[1mnew file mode 100644[m
+[1mindex 0000000..aa00ffa[m
+[1m--- /dev/null[m
+[1m+++ b/.idea/encodings.xml[m
+[36m@@ -0,0 +1,7 @@[m
+[32m+[m[32m<?xml version="1.0" encoding="UTF-8"?>[m
+[32m+[m[32m<project version="4">[m
+[32m+[m[32m  <component name="Encoding">[m
+[32m+[m[32m    <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />[m
+[32m+[m[32m    <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />[m
+[32m+[m[32m  </component>[m
+[32m+[m[32m</project>[m
+\ No newline at end of file[m
+[1mdiff --git a/.idea/misc.xml b/.idea/misc.xml[m
+[1mnew file mode 100644[m
+[1mindex 0000000..001e756[m
+[1m--- /dev/null[m
+[1m+++ b/.idea/misc.xml[m
+[36m@@ -0,0 +1,14 @@[m
+[32m+[m[32m<?xml version="1.0" encoding="UTF-8"?>[m
+[32m+[m[32m<project version="4">[m
+[32m+[m[32m  <component name="ExternalStorageConfigurationManager" enabled="true" />[m
+[32m+[m[32m  <component name="MavenProjectsManager">[m
+[32m+[m[32m    <option name="originalFiles">[m
+[32m+[m[32m      <list>[m
+[32m+[m[32m        <option value="$PROJECT_DIR$/pom.xml" />[m
+[32m+[m[32m      </list>[m
+[32m+[m[32m    </option>[m
+[32m+[m[32m  </component>[m
+[32m+[m[32m  <component name="ProjectRootManager" version="2" languageLevel="JDK_23" default="true" project-jdk-name="23" project-jdk-type="JavaSDK">[m
+[32m+[m[32m    <output url="file://$PROJECT_DIR$/out" />[m
+[32m+[m[32m  </component>[m
+[32m+[m[32m</project>[m
+\ No newline at end of file[m
+[1mdiff --git a/.idea/vcs.xml b/.idea/vcs.xml[m
+[1mnew file mode 100644[m
+[1mindex 0000000..94a25f7[m
+[1m--- /dev/null[m
+[1m+++ b/.idea/vcs.xml[m
+[36m@@ -0,0 +1,6 @@[m
+[32m+[m[32m<?xml version="1.0" encoding="UTF-8"?>[m
+[32m+[m[32m<project version="4">[m
+[32m+[m[32m  <component name="VcsDirectoryMappings">[m
+[32m+[m[32m    <mapping directory="$PROJECT_DIR$" vcs="Git" />[m
+[32m+[m[32m  </component>[m
+[32m+[m[32m</project>[m
+\ No newline at end of file[m
+[1mdiff --git a/.idea/workspace.xml b/.idea/workspace.xml[m
+[1mnew file mode 100644[m
+[1mindex 0000000..a2c465f[m
+[1m--- /dev/null[m
+[1m+++ b/.idea/workspace.xml[m
+[36m@@ -0,0 +1,64 @@[m
+[32m+[m[32m<?xml version="1.0" encoding="UTF-8"?>[m
+[32m+[m[32m<project version="4">[m
+[32m+[m[32m  <component name="AutoImportSettings">[m
+[32m+[m[32m    <option name="autoReloadType" value="SELECTIVE" />[m
+[32m+[m[32m  </component>[m
+[32m+[m[32m  <component name="ChangeListManager">[m
+[32m+[m[32m    <list default="true" id="25cd9e8d-d4d4-42d5-bfce-dfeb8847115c" name="Changes" comment="">[m
+[32m+[m[32m      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />[m
+[32m+[m[32m      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />[m
+[32m+[m[32m      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />[m
+[32m+[m[32m      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />[m
+[32m+[m[32m      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />[m
+[32m+[m[32m      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />[m
+[32m+[m[32m      <change afterPath="$PROJECT_DIR$/src/main/java/com/ejemplo/App.java" afterDir="false" />[m
+[32m+[m[32m      <change afterPath="$PROJECT_DIR$/src/main/java/com/ejemplo/UserForm.java" afterDir="false" />[m
+[32m+[m[32m      <change afterPath="$PROJECT_DIR$/src/test/java/com/ejemplo/AppTest.java" afterDir="false" />[m
+[32m+[m[32m    </list>[m
+[32m+[m[32m    <option name="SHOW_DIALOG" value="false" />[m
+[32m+[m[32m    <option name="HIGHLIGHT_CONFLICTS" value="true" />[m
+[32m+[m[32m    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />[m
+[32m+[m[32m    <option name="LAST_RESOLUTION" value="IGNORE" />[m
+[32m+[m[32m  </component>[m
+[32m+[m[32m  <component name="FileTemplateManagerImpl">[m
+[32m+[m[32m    <option name="RECENT_TEMPLATES">[m
+[32m+[m[32m      <list>[m
+[32m+[m[32m        <option value="Class" />[m
+[32m+[m[32m      </list>[m
+[32m+[m[32m    </option>[m
+[32m+[m[32m  </component>[m
+[32m+[m[32m  <component name="Git.Settings">[m
+[32m+[m[32m    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />[m
+[32m+[m[32m  </component>[m
+[32m+[m[32m  <component name="ProjectColorInfo"><![CDATA[{[m
+[32m+[m[32m  "associatedIndex": 5[m
+[32m+[m[32m}]]></component>[m
+[32m+[m[32m  <component name="ProjectId" id="2n5f0DCbBmcYkJMC8n3rJszGdKp" />[m
+[32m+[m[32m  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />[m
+[32m+[m[32m  <component name="ProjectViewState">[m
+[32m+[m[32m    <option name="hideEmptyMiddlePackages" value="true" />[m
+[32m+[m[32m    <option name="showLibraryContents" value="true" />[m
+[32m+[m[32m  </component>[m
+[32m+[m[32m  <component name="PropertiesComponent"><![CDATA[{[m
+[32m+[m[32m  "keyToString": {[m
+[32m+[m[32m    "Application.App.executor": "Run",[m
+[32m+[m[32m    "Application.UserForm.executor": "Run",[m
+[32m+[m[32m    "Maven. [org.apache.maven.plugins:maven-archetype-plugin:RELEASE:generate].executor": "Run",[m
+[32m+[m[32m    "RunOnceActivity.ShowReadmeOnStart": "true",[m
+[32m+[m[32m    "SHARE_PROJECT_CONFIGURATION_FILES": "true",[m
+[32m+[m[32m    "git-widget-placeholder": "master",[m
+[32m+[m[32m    "kotlin-language-version-configured": "true"[m
+[32m+[m[32m  }[m
+[32m+[m[32m}]]></component>[m
+[32m+[m[32m  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />[m
+[32m+[m[32m  <component name="TaskManager">[m
+[32m+[m[32m    <task active="true" id="Default" summary="Default task">[m
+[32m+[m[32m      <changelist id="25cd9e8d-d4d4-42d5-bfce-dfeb8847115c" name="Changes" comment="" />[m
+[32m+[m[32m      <created>1728267636257</created>[m
+[32m+[m[32m      <option name="number" value="Default" />[m
+[32m+[m[32m      <option name="presentableId" value="Default" />[m
+[32m+[m[32m      <updated>1728267636257</updated>[m
+[32m+[m[32m    </task>[m
+[32m+[m[32m    <servers />[m
+[32m+[m[32m  </component>[m
+[32m+[m[32m</project>[m
+\ No newline at end of file[m
+[1mdiff --git a/pom.xml b/pom.xml[m
+[1mnew file mode 100644[m
+[1mindex 0000000..ac68f0e[m
+[1m--- /dev/null[m
+[1m+++ b/pom.xml[m
+[36m@@ -0,0 +1,30 @@[m
+[32m+[m[32m<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"[m
+[32m+[m[32m  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">[m
+[32m+[m[32m  <modelVersion>4.0.0</modelVersion>[m
+[32m+[m
+[32m+[m[32m  <groupId>com.ejemplo</groupId>[m
+[32m+[m[32m  <artifactId>ConexionPostgreSQL</artifactId>[m
+[32m+[m[32m  <version>1.0-SNAPSHOT</version>[m
+[32m+[m[32m  <packaging>jar</packaging>[m
+[32m+[m
+[32m+[m[32m  <name>ConexionPostgreSQL</name>[m
+[32m+[m[32m  <url>http://maven.apache.org</url>[m
+[32m+[m
+[32m+[m[32m  <properties>[m
+[32m+[m[32m    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>[m
+[32m+[m[32m  </properties>[m
+[32m+[m
+[32m+[m[32m  <dependencies>[m
+[32m+[m[32m    <dependency>[m
+[32m+[m[32m      <groupId>junit</groupId>[m
+[32m+[m[32m      <artifactId>junit</artifactId>[m
+[32m+[m[32m      <version>3.8.1</version>[m
+[32m+[m[32m      <scope>test</scope>[m
+[32m+[m[32m    </dependency>[m
+[32m+[m[32m    <dependency>[m
+[32m+[m[32m      <groupId>org.postgresql</groupId>[m
+[32m+[m[32m      <artifactId>postgresql</artifactId>[m
+[32m+[m[32m      <version>42.6.0</version>[m
+[32m+[m[32m    </dependency>[m
+[32m+[m[32m  </dependencies>[m
+[32m+[m[32m</project>[m
+[1mdiff --git a/src/main/java/com/ejemplo/App.java b/src/main/java/com/ejemplo/App.java[m
+[1mnew file mode 100644[m
+[1mindex 0000000..f55581a[m
+[1m--- /dev/null[m
+[1m+++ b/src/main/java/com/ejemplo/App.java[m
+[36m@@ -0,0 +1,67 @@[m
+[32m+[m[32mpackage com.ejemplo;[m
+[32m+[m
+[32m+[m[32mimport java.sql.*;[m
+[32m+[m[32mimport java.util.Scanner;[m
+[32m+[m
+[32m+[m[32mpublic class App[m
+[32m+[m[32m{[m
+[32m+[m[32m    private static final String URL = "jdbc:postgresql://localhost:5432/PrimerBaseDeDatos"; // Cambia el nombre de la base de datos si es necesario[m
+[32m+[m[32m    private static final String USER = "postgres"; // Usuario por defecto[m
+[32m+[m[32m    private static final String PASSWORD = "123qweasdzxc"; // Cambia esto por la contraseña que elegiste[m
+[32m+[m
+[32m+[m[32m    public static void main( String[] args ){[m
+[32m+[m[32m        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {[m
+[32m+[m[32m            System.out.println("Conexión exitosa a la base de datos!");[m
+[32m+[m
+[32m+[m[32m            // Insertar un nuevo usuario[m
+[32m+[m[32m            //insertarUsuario(connection);[m
+[32m+[m[32m            // Leer usuarios[m
+[32m+[m[32m            System.out.println("Usuarios en la base de datos:");[m
+[32m+[m[32m            leerUsuarios(connection);[m
+[32m+[m[32m        } catch (SQLException e) {[m
+[32m+[m[32m            System.out.println("Error en la conexión: " + e.getMessage());[m
+[32m+[m[32m        }[m
+[32m+[m[32m    }[m
+[32m+[m[32m    private static void insertarUsuario(Connection connection) {[m
+[32m+[m[32m        Scanner scanner = new Scanner(System.in);[m
+[32m+[m
+[32m+[m[32m        System.out.print("Ingresa el nombre: ");[m
+[32m+[m[32m        String nombre = scanner.nextLine();[m
+[32m+[m
+[32m+[m[32m        System.out.print("Ingresa el correo: ");[m
+[32m+[m[32m        String correo = scanner.nextLine();[m
+[32m+[m
+[32m+[m[32m        System.out.print("Ingresa la fecha de nacimiento (YYYY-MM-DD): ");[m
+[32m+[m[32m        String fechaNacimiento = scanner.nextLine();[m
+[32m+[m
+[32m+[m[32m        String sql = "INSERT INTO usuarios (nombre, correo, fecha_nacimiento) VALUES (?, ?, ?::date)";[m
+[32m+[m
+[32m+[m[32m        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {[m
+[32m+[m[32m            pstmt.setString(1, nombre);[m
+[32m+[m[32m            pstmt.setString(2, correo);[m
+[32m+[m[32m            pstmt.setString(3, fechaNacimiento);[m
+[32m+[m[32m            pstmt.executeUpdate();[m
+[32m+[m[32m            System.out.println("Usuario insertado exitosamente!");[m
+[32m+[m[32m        } catch (SQLException e) {[m
+[32m+[m[32m            System.out.println("Error al insertar el usuario: " + e.getMessage());[m
+[32m+[m[32m        }[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    public static void leerUsuarios(Connection connection) {[m
+[32m+[m[32m        String sql = "SELECT * FROM usuarios"; // Asegúrate de que este nombre coincide con el de tu tabla[m
+[32m+[m[32m        try (Statement statement = connection.createStatement();[m
+[32m+[m[32m             ResultSet resultSet = statement.executeQuery(sql)) {[m
+[32m+[m[32m            while (resultSet.next()) {[m
+[32m+[m[32m                int id = resultSet.getInt("id");[m
+[32m+[m[32m                String nombre = resultSet.getString("nombre");[m
+[32m+[m[32m                String correo = resultSet.getString("correo");[m
+[32m+[m[32m                Date fechaNacimiento = resultSet.getDate("fecha_nacimiento");[m
+[32m+[m[32m                System.out.printf("ID: %d, Nombre: %s, Correo: %s, Fecha de Nacimiento: %s\n",[m
+[32m+[m[32m                        id, nombre, correo, fechaNacimiento);[m
+[32m+[m[32m            }[m
+[32m+[m[32m        } catch (SQLException e) {[m
+[32m+[m[32m            System.out.println("Error al leer usuarios: " + e.getMessage());[m
+[32m+[m[32m        }[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m}[m
+[1mdiff --git a/src/main/java/com/ejemplo/UserForm.java b/src/main/java/com/ejemplo/UserForm.java[m
+[1mnew file mode 100644[m
+[1mindex 0000000..4a7a47f[m
+[1m--- /dev/null[m
+[1m+++ b/src/main/java/com/ejemplo/UserForm.java[m
+[36m@@ -0,0 +1,43 @@[m
+[32m+[m[32mpackage com.ejemplo;[m
+[32m+[m
+[32m+[m[32mimport javax.swing.*;[m
+[32m+[m[32mimport java.awt.event.ActionEvent;[m
+[32m+[m[32mimport java.awt.event.ActionListener;[m
+[32m+[m
+[32m+[m[32mpublic class UserForm {[m
+[32m+[m[32m    public static void main(String[] args) {[m
+[32m+[m[32m        JFrame frame = new JFrame("Formulario de Usuario");[m
+[32m+[m[32m        frame.setSize(300, 200);[m
+[32m+[m[32m        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);[m
+[32m+[m
+[32m+[m[32m        JPanel panel = new JPanel();[m
+[32m+[m[32m        frame.add(panel);[m
+[32m+[m[32m        placeComponents(panel);[m
+[32m+[m
+[32m+[m[32m        frame.setVisible(true);[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    private static void placeComponents(JPanel panel) {[m
+[32m+[m[32m        panel.setLayout(null);[m
+[32m+[m
+[32m+[m[32m        JLabel userLabel = new JLabel("Usuario:");[m
+[32m+[m[32m        userLabel.setBounds(10, 20, 80, 25);[m
+[32m+[m[32m        panel.add(userLabel);[m
+[32m+[m
+[32m+[m[32m        JTextField userText = new JTextField(20);[m
+[32m+[m[32m        userText.setBounds(100, 20, 165, 25);[m
+[32m+[m[32m        panel.add(userText);[m
+[32m+[m
+[32m+[m[32m        JButton loginButton = new JButton("Registrar");[m
+[32m+[m[32m        loginButton.setBounds(10, 80, 150, 25);[m
+[32m+[m[32m        panel.add(loginButton);[m
+[32m+[m
+[32m+[m[32m        loginButton.addActionListener(new ActionListener() {[m
+[32m+[m[32m            @Override[m
+[32m+[m[32m            public void actionPerformed(ActionEvent e) {[m
+[32m+[m[32m                // Aquí iría el código para registrar al usuario[m
+[32m+[m[32m                System.out.println("Usuario registrado: " + userText.getText());[m
+[32m+[m[32m            }[m
+[32m+[m[32m        });[m
+[32m+[m[32m    }[m
+[32m+[m[32m}[m
+[1mdiff --git a/src/test/java/com/ejemplo/AppTest.java b/src/test/java/com/ejemplo/AppTest.java[m
+[1mnew file mode 100644[m
+[1mindex 0000000..cc16648[m
+[1m--- /dev/null[m
+[1m+++ b/src/test/java/com/ejemplo/AppTest.java[m
+[36m@@ -0,0 +1,38 @@[m
+[32m+[m[32mpackage com.ejemplo;[m
+[32m+[m
+[32m+[m[32mimport junit.framework.Test;[m
+[32m+[m[32mimport junit.framework.TestCase;[m
+[32m+[m[32mimport junit.framework.TestSuite;[m
+[32m+[m
+[32m+[m[32m/**[m
+[32m+[m[32m * Unit test for simple App.[m
+[32m+[m[32m */[m
+[32m+[m[32mpublic class AppTest[m[41m [m
+[32m+[m[32m    extends TestCase[m
+[32m+[m[32m{[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     * Create the test case[m
+[32m+[m[32m     *[m
+[32m+[m[32m     * @param testName name of the test case[m
+[32m+[m[32m     */[m
+[32m+[m[32m    public AppTest( String testName )[m
+[32m+[m[32m    {[m
+[32m+[m[32m        super( testName );[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     * @return the suite of tests being tested[m
+[32m+[m[32m     */[m
+[32m+[m[32m    public static Test suite()[m
+[32m+[m[32m    {[m
+[32m+[m[32m        return new TestSuite( AppTest.class );[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    /**[m
+[32m+[m[32m     * Rigourous Test :-)[m
+[32m+[m[32m     */[m
+[32m+[m[32m    public void testApp()[m
+[32m+[m[32m    {[m
+[32m+[m[32m        assertTrue( true );[m
+[32m+[m[32m    }[m
+[32m+[m[32m}[m
